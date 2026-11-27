@@ -455,9 +455,11 @@ async function init() {
 
   $("#stressClose").addEventListener("click", () => $("#stress").close());
   await reloadAll();
+  $("#loader")?.classList.add("done");
 }
 
 init().catch((e) => {
+  $("#loader")?.classList.add("done");
   document.body.prepend(
     h(
       "p",

@@ -7,6 +7,16 @@
 <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+
+<div id="loader" class="loader" role="status" aria-live="polite">
+  <div class="loader-box">
+    <div class="loader-badge">OFFLINE DETERMINISTIC ENGINE</div>
+    <h2>Initializing outbreak dispatch engine…</h2>
+    <p id="loaderMsg" class="sub">Loading ward forecasts, bed capacities, and vector models</p>
+    <div class="loader-bar" aria-hidden="true"><span></span></div>
+  </div>
+</div>
+
 <header class="top">
   <div>
     <h1>Outbreak decision and dispatch engine</h1>
@@ -49,6 +59,38 @@
   </aside>
 
   <main>
+    <section class="hero" aria-labelledby="hHero">
+      <div class="hero-copy">
+        <span class="hero-kicker">MUNICIPAL VECTOR &amp; CLINICAL OPERATIONS</span>
+        <h2 id="hHero">Prioritize scarce medical stock, hospital beds, and spraying crews across city wards</h2>
+        <p class="sub">Adjust supply constraints and surge multipliers on the left to compute deterministic ward rankings, intra-city patient transfers, and ready-to-send field dispatches.</p>
+        <nav class="hero-links" aria-label="Quick section jump">
+          <a href="#hHeat">Risk heatmap</a>
+          <a href="#hAlloc">Supply allocation</a>
+          <a href="#hBeds">Bed routing</a>
+          <a href="#hVec">Vector simulator</a>
+          <a href="#hDisp">Dispatch preview</a>
+        </nav>
+      </div>
+      <div class="hero-stats" aria-label="System highlights">
+        <div class="stat">
+          <small>Execution</small>
+          <strong>Zero-Cloud</strong>
+          <span>Runs 100% locally with outbound network blocked</span>
+        </div>
+        <div class="stat">
+          <small>Optimization</small>
+          <strong>Multi-Resource</strong>
+          <span>Saline, diagnostic kits, crews &amp; bed transfers</span>
+        </div>
+        <div class="stat">
+          <small>Field Output</small>
+          <strong>3 Formats</strong>
+          <span>160-char SMS, WhatsApp &amp; printable brief</span>
+        </div>
+      </div>
+    </section>
+
     <section aria-labelledby="hHeat">
       <h2 id="hHeat">Ward risk heatmap</h2>
       <div id="heat" class="heat"></div>
