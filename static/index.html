@@ -3,101 +3,291 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dengue dispatch engine</title>
+<title>Bangladesh Dengue Surveillance &amp; Command</title>
 <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-<header class="top">
-  <div>
-    <h1>Outbreak decision and dispatch engine</h1>
-    <p id="asof" class="sub">Loading forecast window</p>
-  </div>
-  <div class="top-actions">
-    <span id="mode" class="mode" role="status">MODE: 100% OFFLINE DETERMINISTIC ENGINE</span>
-    <button id="stressBtn" class="primary">Offline kill-switch and stress test</button>
+<a class="skip" href="#live-dashboard">Skip to command dashboard</a>
+
+<!-- ============ EXECUTIVE NAV ============ -->
+<header class="nav" id="top">
+  <div class="nav-in">
+    <a class="brand" href="#overview" aria-label="Bangladesh Dengue Surveillance and Command, home">
+      <svg class="crest" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <path d="M24 3 6 9v13c0 11 7.5 19.5 18 23 10.5-3.5 18-12 18-23V9L24 3Z" fill="#17262b"/>
+        <path d="M24 7.2 9.6 12v10c0 8.9 5.9 16 14.4 19.1C32.5 38 38.4 30.9 38.4 22V12L24 7.2Z" fill="none" stroke="#3d8aa0" stroke-width="1.4"/>
+        <path d="M21.5 15h5v6.5H33v5h-6.5V33h-5v-6.5H15v-5h6.5V15Z" fill="#f8fafc"/>
+        <path d="M13 37c3-2.4 5-2.4 8 0s5 2.4 8 0 4-2 6-.6" fill="none" stroke="#8fbaa9" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-t"><strong>Bangladesh Dengue Surveillance &amp; Command</strong><small>Urban health operations center</small></span>
+    </a>
+    <nav class="links" aria-label="Page sections">
+      <a href="#overview">Overview</a>
+      <a href="#methodology">Methodology</a>
+      <a href="#live-dashboard">Command Dashboard</a>
+    </nav>
+    <div class="nav-actions">
+      <span id="mode" class="mode" role="status">MODE: 100% OFFLINE DETERMINISTIC</span>
+      <button id="stressBtn" class="primary">Offline Kill-Switch Test</button>
+    </div>
   </div>
 </header>
 
-<div class="shell">
-  <aside class="rail" aria-label="Controls">
-    <fieldset>
-      <legend>Scenario</legend>
-      <label class="radio"><input type="radio" name="scenario" value="peak" checked> <span id="lblPeak">Peak-season replay</span></label>
-      <label class="radio"><input type="radio" name="scenario" value="live"> <span id="lblLive">Live forecast</span></label>
-    </fieldset>
-    <label>City corporation
-      <select id="city"><option>All</option></select>
-    </label>
-    <label>Forecast basis
-      <select id="basis"><option value="expected">Expected cases</option><option value="upper">Upper bound (q90)</option></select>
-    </label>
-    <label>Available regional stock <output id="stockO">60%</output>
-      <input id="stock" type="range" min="30" max="100" step="5" value="60">
-    </label>
-    <label>Total spraying crews <output id="crewsO">40</output>
-      <input id="crews" type="range" min="10" max="120" step="1" value="40">
-    </label>
-    <label>Outbreak surge <output id="surgeO">1.0x</output>
-      <input id="surge" type="range" min="1" max="4" step="0.25" value="1">
-    </label>
-    <div class="legend" aria-label="Heatmap legend">
-      <span>Lower priority</span>
-      <i class="t0"></i><i class="t1"></i><i class="t2"></i><i class="t3"></i><i class="t4"></i><i class="t5"></i>
-      <span>Higher</span>
-      <p><b class="flag">!</b> Red base edge marks a ward with a critical deficit.</p>
+<!-- ============ LANDING HERO ============ -->
+<section class="hero" id="overview" aria-labelledby="heroH">
+  <svg class="hero-bg" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="gridp" width="48" height="48" patternUnits="userSpaceOnUse">
+        <path d="M48 0H0V48" fill="none" stroke="#17262b" stroke-opacity=".06" stroke-width="1"/>
+      </pattern>
+      <linearGradient id="fadeg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+      <mask id="fadem"><rect width="1440" height="760" fill="url(#fadeg)"/></mask>
+    </defs>
+    <g mask="url(#fadem)">
+      <rect width="1440" height="760" fill="url(#gridp)"/>
+      <g fill="none" stroke="#3d8aa0" stroke-opacity=".22" stroke-width="1.2">
+        <path d="M-40 520C140 470 260 560 420 510S690 380 860 430s330 120 620 40"/>
+        <path d="M-40 470C150 420 270 510 430 460S700 330 870 380s330 120 620 40"/>
+        <path d="M-40 420C160 370 280 460 440 410S710 280 880 330s330 120 620 40"/>
+        <path d="M-40 370C170 320 290 410 450 360S720 230 890 280s330 120 620 40"/>
+        <path d="M-40 320C180 270 300 360 460 310S730 180 900 230s330 120 620 40"/>
+        <path d="M-40 270C190 220 310 310 470 260S740 130 910 180s330 120 620 40"/>
+        <ellipse cx="1130" cy="250" rx="210" ry="120"/>
+        <ellipse cx="1130" cy="250" rx="150" ry="82"/>
+        <ellipse cx="1130" cy="250" rx="90" ry="44"/>
+      </g>
+    </g>
+  </svg>
+
+  <div class="hero-in">
+    <div class="hero-l">
+      <p class="eyebrow">DGHS &amp; CITY CORPORATION DECISION SUPPORT • 2016–2025</p>
+      <h1 id="heroH">Forecast the surge.<br>Dispatch before the wards fill.</h1>
+      <p class="lede">Meteorological lag models convert rainfall and humidity signals into 2–4 week ward-level triage, allocating scarce saline, kits and spraying crews and routing beds across city corporations before hospitals reach capacity.</p>
+      <div class="cta">
+        <a class="btn primary" href="#live-dashboard">Launch Command Center
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false"><path d="M4 10h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn ghost" href="#methodology">View Epidemiological Pipeline</a>
+      </div>
+      <dl class="kpis">
+        <div><dt>2–4 Weeks</dt><dd>Advance Warning</dd></div>
+        <div><dt>60 Wards / 5 Cities</dt><dd>Spatial Coverage</dd></div>
+        <div><dt>3-Tier</dt><dd>Resource &amp; Bed Routing</dd></div>
+        <div><dt>100% Offline</dt><dd>Deterministic Engine</dd></div>
+      </dl>
     </div>
-  </aside>
 
-  <main>
-    <section aria-labelledby="hHeat">
-      <h2 id="hHeat">Ward risk heatmap</h2>
-      <div id="heat" class="heat"></div>
-      <div id="totals" class="totals"></div>
-    </section>
-
-    <section aria-labelledby="hAlloc">
-      <h2 id="hAlloc">Scarcity allocation, highest priority first</h2>
-      <div class="scroll tall"><table id="alloc"></table></div>
-    </section>
-
-    <section aria-labelledby="hBeds">
-      <h2 id="hBeds">Intra-city bed routing</h2>
-      <div class="two">
-        <div><h3>Transfer manifest</h3><div class="scroll"><table id="xfer"></table></div></div>
-        <div><h3>City bed utilization</h3><table id="cityTbl"></table></div>
+    <aside class="clock" aria-labelledby="clockH">
+      <header>
+        <p class="eyebrow sm">Transmission lag model</p>
+        <h2 id="clockH">The 21-Day Breeding-to-Ward Clock</h2>
+      </header>
+      <ol class="steps">
+        <li>
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M7 15a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 7.5a3.8 3.8 0 0 1-.5 7.5H7Z"/><path d="m8 18-1 3m5-3-1 3m5-3-1 3"/></svg>
+          </span>
+          <div><span class="wk">Week 0</span><h3>Monsoon Rainfall &amp; Water-Logging</h3><p>Standing water accumulates in containers, drains and construction sites across dense wards.</p></div>
+        </li>
+        <li>
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M12 3.5s6 6.2 6 10.5a6 6 0 0 1-12 0C6 9.700 12 3.500 12 3.500Z"/><path d="M9.500 14.500c.8 1.200 2 1.800 3.200 1.500"/></svg>
+          </span>
+          <div><span class="wk">Weeks 1–2</span><h3>Aedes Larval Maturation</h3><p>Humidity and temperature accelerate larval development and adult emergence.</p></div>
+        </li>
+        <li>
+          <span class="ico crit" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M4 21V9l8-5 8 5v12"/><path d="M2 21h20"/><path d="M12 10v6m-3-3h6"/></svg>
+          </span>
+          <div><span class="wk">Weeks 2–4</span><h3>Hospital Surge &amp; Pre-Emptive Dispatch</h3><p>Admissions peak. Supplies, crews and bed transfers are already in position.</p></div>
+        </li>
+      </ol>
+      <div class="tiers" aria-label="Risk tier legend">
+        <span class="tier"><i class="t1"></i>Low</span>
+        <span class="tier"><i class="t2"></i>Medium</span>
+        <span class="tier"><i class="t3"></i>High</span>
+        <span class="tier"><i class="t5"></i>Critical</span>
       </div>
-    </section>
+    </aside>
+  </div>
+</section>
 
-    <section aria-labelledby="hVec">
-      <h2 id="hVec">Vector-control simulator</h2>
-      <div class="simbar">
-        <label>Crews to auto-assign <input id="auto" type="number" min="1" max="180" value="12"></label>
-        <button id="autoBtn">Auto-assign crews</button>
-        <button id="selBtn">Simulate my selection</button>
-        <button id="clrBtn" class="ghost">Clear</button>
+<!-- ============ METHODOLOGY ============ -->
+<section class="method" id="methodology" aria-labelledby="hMeth">
+  <div class="wrap">
+    <p class="eyebrow">Operational pipeline</p>
+    <h2 id="hMeth" class="sec-h">From weather signal to ward dispatch</h2>
+    <div class="cols3">
+      <article class="mcard">
+        <span class="num">01</span>
+        <h3>Signal ingestion</h3>
+        <p>Weekly rainfall, humidity and temperature series are aligned with ward-level case counts and lagged across a 0–8 week window.</p>
+        <div class="pills"><span>Rainfall</span><span>Humidity</span><span>Temperature</span><span>Lag features</span></div>
+      </article>
+      <article class="mcard">
+        <span class="num">02</span>
+        <h3>Forecast and priority</h3>
+        <p>Serialized models produce expected cases and an upper bound (q90) per ward, which are ranked into a single priority order.</p>
+        <div class="pills"><span>Expected cases</span><span>Upper bound q90</span><span>Ward rank</span></div>
+      </article>
+      <article class="mcard">
+        <span class="num">03</span>
+        <h3>Scarcity-aware dispatch</h3>
+        <p>Saline, kits and crews are allocated by priority, beds are routed within each city, and ward notices are generated for SMS, WhatsApp and print.</p>
+        <div class="pills"><span>Saline</span><span>Kits</span><span>Crews</span><span>Bed routing</span><span>Vector control</span></div>
+      </article>
+    </div>
+
+    <figure class="lag">
+      <figcaption>
+        <h3>Rainfall lag correlation, weeks 0 to 8</h3>
+        <p class="sub">Relative strength of the rainfall-to-cases association by lag. Week 3 is the peak. Illustrative profile; replace with your validated coefficients.</p>
+      </figcaption>
+      <div class="bars" role="img" aria-label="Bar chart of rainfall lag correlation by week, 0 to 8. The association peaks at week 3.">
+        <div class="bar"><i style="height:22%"></i><span>0</span></div>
+        <div class="bar"><i style="height:41%"></i><span>1</span></div>
+        <div class="bar"><i style="height:66%"></i><span>2</span></div>
+        <div class="bar peak"><i style="height:100%"></i><span>3</span><b>Peak</b></div>
+        <div class="bar"><i style="height:82%"></i><span>4</span></div>
+        <div class="bar"><i style="height:58%"></i><span>5</span></div>
+        <div class="bar"><i style="height:37%"></i><span>6</span></div>
+        <div class="bar"><i style="height:24%"></i><span>7</span></div>
+        <div class="bar"><i style="height:14%"></i><span>8</span></div>
       </div>
-      <div id="simTotals" class="totals"></div>
-      <div class="scroll tall"><table id="board"></table></div>
-    </section>
+      <p class="axis">Lag in weeks since rainfall</p>
+    </figure>
+  </div>
+</section>
 
-    <section aria-labelledby="hDisp">
-      <h2 id="hDisp">Dispatch preview</h2>
-      <div class="simbar">
-        <label>Ward <select id="wardSel"></select></label>
-        <div class="tabs" role="tablist">
-          <button role="tab" data-tab="sms" aria-selected="true">SMS</button>
-          <button role="tab" data-tab="wa" aria-selected="false">WhatsApp</button>
-          <button role="tab" data-tab="doc" aria-selected="false">Commissioner brief</button>
+<!-- ============ COMMAND DASHBOARD ============ -->
+<section class="dash" id="live-dashboard" aria-labelledby="hDash">
+  <div class="wrap">
+    <div class="dash-head">
+      <div>
+        <p class="eyebrow">Live command dashboard</p>
+        <h2 id="hDash" class="sec-h">Ward-level triage workspace</h2>
+        <p id="asof" class="sub">Loading forecast window</p>
+      </div>
+      <div class="seg" role="tablist" aria-label="Dashboard views">
+        <button class="seg-btn" role="tab" id="seg-forecast" data-view="forecast" aria-selected="true" aria-controls="view-forecast">Forecast</button>
+        <button class="seg-btn" role="tab" id="seg-ops" data-view="ops" aria-selected="false" aria-controls="view-ops" tabindex="-1">Resource &amp; Dispatch</button>
+        <button class="seg-btn" role="tab" id="seg-validation" data-view="validation" aria-selected="false" aria-controls="view-validation" tabindex="-1">Model Validation</button>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="rail" aria-label="Controls">
+        <fieldset>
+          <legend>Scenario</legend>
+          <label class="radio"><input type="radio" name="scenario" value="peak" checked> <span id="lblPeak">Peak-season replay</span></label>
+          <label class="radio"><input type="radio" name="scenario" value="live"> <span id="lblLive">Live forecast</span></label>
+        </fieldset>
+        <label>City corporation
+          <select id="city"><option>All</option></select>
+        </label>
+        <label>Forecast basis
+          <select id="basis"><option value="expected">Expected cases</option><option value="upper">Upper bound (q90)</option></select>
+        </label>
+        <label>Available regional stock <output id="stockO">60%</output>
+          <input id="stock" type="range" min="30" max="100" step="5" value="60">
+        </label>
+        <label>Total spraying crews <output id="crewsO">40</output>
+          <input id="crews" type="range" min="10" max="120" step="1" value="40">
+        </label>
+        <label>Outbreak surge <output id="surgeO">1.0x</output>
+          <input id="surge" type="range" min="1" max="4" step="0.25" value="1">
+        </label>
+        <div class="legend" aria-label="Heatmap legend">
+          <span>Lower priority</span>
+          <i class="t0"></i><i class="t1"></i><i class="t2"></i><i class="t3"></i><i class="t4"></i><i class="t5"></i>
+          <span>Higher</span>
+          <p><b class="flag">!</b> Red base edge marks a ward with a critical deficit.</p>
         </div>
-        <button id="copyBtn" class="ghost">Copy text</button>
-        <button id="printBtn" class="ghost">Print brief</button>
-      </div>
-      <div id="pane-sms" class="pane"><pre id="smsTxt" class="sms"></pre><p id="smsLen" class="sub"></p></div>
-      <div id="pane-wa" class="pane" hidden><pre id="waTxt" class="wa"></pre></div>
-      <div id="pane-doc" class="pane" hidden><iframe id="docFrame" title="Commissioner brief preview"></iframe></div>
-    </section>
-  </main>
-</div>
+      </aside>
+
+      <main>
+        <!-- VIEW: FORECAST -->
+        <div id="view-forecast" role="tabpanel" aria-labelledby="seg-forecast" class="view">
+          <section class="card" aria-labelledby="hHeat">
+            <h2 id="hHeat">Ward risk heatmap</h2>
+            <div id="heat" class="heat"></div>
+            <div id="totals" class="totals"></div>
+          </section>
+        </div>
+
+        <!-- VIEW: RESOURCE & DISPATCH -->
+        <div id="view-ops" role="tabpanel" aria-labelledby="seg-ops" class="view" hidden>
+          <section class="card no-print" aria-labelledby="hAlloc">
+            <h2 id="hAlloc">Scarcity allocation, highest priority first</h2>
+            <div class="scroll tall"><table id="alloc"></table></div>
+          </section>
+
+          <section class="card no-print" aria-labelledby="hBeds">
+            <h2 id="hBeds">Intra-city bed routing</h2>
+            <div class="two">
+              <div><h3>Transfer manifest</h3><div class="scroll"><table id="xfer"></table></div></div>
+              <div><h3>City bed utilization</h3><div class="scroll"><table id="cityTbl"></table></div></div>
+            </div>
+          </section>
+
+          <section class="card no-print" aria-labelledby="hVec">
+            <h2 id="hVec">Vector-control simulator</h2>
+            <div class="simbar">
+              <label>Crews to auto-assign <input id="auto" type="number" min="1" max="180" value="12"></label>
+              <button id="autoBtn">Auto-assign crews</button>
+              <button id="selBtn">Simulate my selection</button>
+              <button id="clrBtn" class="ghost">Clear</button>
+            </div>
+            <div id="simTotals" class="totals"></div>
+            <div class="scroll tall"><table id="board"></table></div>
+          </section>
+
+          <section class="card print-brief" aria-labelledby="hDisp">
+            <div class="print-head" aria-hidden="true">
+              <p>Government of the People's Republic of Bangladesh</p>
+              <p>Directorate General of Health Services &bull; City Corporation Dengue Operations</p>
+              <p class="pd">OFFICIAL DISPATCH DIRECTIVE &mdash; FOR IMMEDIATE ACTION</p>
+            </div>
+            <h2 id="hDisp">Dispatch preview</h2>
+            <div class="simbar">
+              <label>Ward <select id="wardSel"></select></label>
+              <div class="tabs" role="tablist" aria-label="Dispatch format">
+                <button role="tab" data-tab="sms" aria-selected="true">SMS</button>
+                <button role="tab" data-tab="wa" aria-selected="false">WhatsApp</button>
+                <button role="tab" data-tab="doc" aria-selected="false">Commissioner brief</button>
+              </div>
+              <button id="copyBtn" class="ghost">Copy text</button>
+              <button id="printBtn" class="ghost">Print brief</button>
+            </div>
+            <div id="pane-sms" class="pane"><pre id="smsTxt" class="sms"></pre><p id="smsLen" class="sub"></p></div>
+            <div id="pane-wa" class="pane" hidden><pre id="waTxt" class="wa"></pre></div>
+            <div id="pane-doc" class="pane" hidden><iframe id="docFrame" title="Commissioner brief preview"></iframe></div>
+          </section>
+        </div>
+
+        <!-- VIEW: MODEL VALIDATION -->
+        <div id="view-validation" role="tabpanel" aria-labelledby="seg-validation" class="view" hidden>
+          <section class="card" aria-labelledby="hVal">
+            <h2 id="hVal">Model validation and offline assurance</h2>
+            <div class="cols3 tight">
+              <div class="vitem"><h3>Out-of-sample replay</h3><p>The peak-season scenario replays the forecast origin shown above using models that did not see the replayed weeks.</p></div>
+              <div class="vitem"><h3>Offline kill-switch</h3><p>The stress test runs with all outbound connections blocked and confirms the engine still produces a full plan.</p></div>
+              <div class="vitem"><h3>Worst-case stress</h3><p>Surge, stock and crew limits are pushed together, then critical-deficit wards and unmet bed demand are reported.</p></div>
+            </div>
+            <div class="cta"><button id="valRun" class="primary">Run offline stress test</button></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="wrap">Runs entirely on this machine. No external fonts, scripts, icons or network requests.</div>
+</footer>
 
 <dialog id="stress">
   <h2>Offline kill-switch and outbreak stress test</h2>
@@ -105,6 +295,30 @@
   <ul id="stressList" class="checks"></ul>
   <button id="stressClose" class="primary">Close</button>
 </dialog>
+
 <script src="/static/app.js"></script>
+<script>
+(() => {
+  const btns = [...document.querySelectorAll(".seg-btn")];
+  const show = (v) => btns.forEach((b) => {
+    const on = b.dataset.view === v;
+    b.setAttribute("aria-selected", on);
+    b.tabIndex = on ? 0 : -1;
+    document.getElementById("view-" + v).hidden = !on;
+  });
+  btns.forEach((b, i) => {
+    b.addEventListener("click", () => show(b.dataset.view));
+    b.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const n = btns[(i + (e.key === "ArrowRight" ? 1 : btns.length - 1)) % btns.length];
+      n.focus(); show(n.dataset.view);
+    });
+  });
+  document.getElementById("valRun").addEventListener("click", () => document.getElementById("stressBtn").click());
+  const nav = document.querySelector(".nav");
+  const edge = () => nav.classList.toggle("scrolled", window.scrollY > 8);
+  window.addEventListener("scroll", edge, { passive: true }); edge();
+})();
+</script>
 </body>
 </html>

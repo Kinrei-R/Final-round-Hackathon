@@ -58,12 +58,39 @@ function renderHeat() {
 
 function renderAlloc() {
   const ratio = (a, r) => `${a} / ${r}`;
-  table($("#alloc"), [["Rank", 1], ["Ward"], ["Cases/wk", 1], ["Priority", 1], ["Saline", 1], ["Kits", 1], ["Crews", 1], ["Status"]],
-    rows().map((r) => ({ id: r.ward_id, cls: r.ward_id === S.ward ? "sel" : "",
-      cells: [r.rank, r.ward_id, r.cases, f2(r.priority), ratio(r.saline_alloc, r.saline_req), ratio(r.kits_alloc, r.kits_req), ratio(r.crews_alloc, r.crews_req),
-        r.deficit ? h("span", { class: "badge" }, `CRITICAL DEFICIT: short ${[["saline", r.saline_short], ["kits", r.kits_short], ["crews", r.crews_short]].filter((x) => x[1] > 0).map((x) => `${x[0]} ${x[1]}`).join(", ")}`) : h("span", { class: "ok" }, "Fully supplied")] })), pick);
+  table(
+    $("#alloc"),
+    [["Rank", 1], ["Ward"], ["Cases/wk", 1], ["Priority", 1], ["Saline", 1], ["Kits", 1], ["Crews", 1], ["Status"]],
+    rows().map((r) => ({
+      id: r.ward_id,
+      cls: r.ward_id === S.ward ? "sel" : "",
+      cells: [
+        r.rank,
+        r.ward_id,
+        r.cases,
+        f2(r.priority),
+        ratio(r.saline_alloc, r.saline_req),
+        ratio(r.kits_alloc, r.kits_req),
+        ratio(r.crews_alloc, r.crews_req),
+        r.deficit
+          ? h(
+              "span",
+              { class: "badge" },
+              `CRITICAL DEFICIT: short ${[
+                ["saline", r.saline_short],
+                ["kits", r.kits_short],
+                ["crews", r.crews_short],
+              ]
+                .filter((x) => x[1] > 0)
+                .map((x) => `${x[0]} ${x[1]}`)
+                .join(", ")}`
+            )
+          : h("span", { class: "badge ok" }, "100% FULFILLED"),
+      ],
+    })),
+    pick
+  );
 }
-
 function renderBeds() {
   const m = S.plan.manifest.filter((x) => S.city === "All" || x.city === S.city);
   if (!m.length) $("#xfer").replaceChildren(h("caption", { class: "sub", style: "padding:10px;text-align:left" }, S.plan.unmet_beds ? "No ward has spare beds to receive transfers." : "No transfers needed at this load. Raise the surge to test overflow."));
