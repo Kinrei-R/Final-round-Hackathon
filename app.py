@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field
 
 from src import operations as op
 from src.inference import Engine
+from src.water_allocation import allocate_safe_water
 
 ROOT = Path(__file__).parent
 MODE = "MODE: 100% OFFLINE DETERMINISTIC ENGINE"
