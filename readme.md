@@ -35,3 +35,16 @@ Converts ward-level predicted cases and risk classifications into exact logistic
   * `diagnostic_kits_needed`
   * `hospital_beds_required`
   * `spraying_crews_assigned`
+  * **Interactive Scarcity Controls:** Live sliders allow officers to adjust **Available Regional Stock (`30%` – `100%`)** and **Total Spraying Crews**.
+* **Risk & Density Prioritization:** Under scarcity ($<100\%$ stock), supplies and crews are dynamically prioritized using a weighted urgency score combining predicted outbreak risk tier and `population_density_sqkm`.
+* **Live Deficit Alerts:** Automatically flags critical ward-level supply deficits whenever allocated inventory falls below $100\%$ of projected demand.
+
+### 2. Hospital Surge & Cross-Ward Overflow Routing
+Prevents localized hospital collapse during case surges while respecting municipal administrative boundaries:
+* **Intra-City Patient Routing:** Identifies wards where `hospital_beds_required` exceeds local bed capacity and automatically routes overflow patients to lower-burden wards strictly **within the same city pool**:
+* Dhaka North
+  * Dhaka South
+  * Chattogram
+  * Gazipur
+  * Narayanganj
+* **Net Deficit & Headroom Reporting:** Displays pre-transfer shortages, ward-to-ward transfer manifests, remaining city-wide bed headroom, and net unabsorbable city deficits if total municipal capacity is breached.
