@@ -192,3 +192,23 @@ The dashboard communicates with the underlying modules through
 the existing project architecture.
 
 ---
+
+### 10. Offline Architecture
+
+The system is designed to run locally without requiring continuous
+internet connectivity.
+
+Offline-supported operations:
+
+- Dataset processing
+- Risk assessment using available local data
+- Resource allocation
+- Hospital overflow routing
+- Intervention simulation
+- Dispatch generation
+- Dashboard visualization
+- Data export
+
+External APIs are not required for core operational functionality.
+
+---
