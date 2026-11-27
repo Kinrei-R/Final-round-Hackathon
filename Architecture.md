@@ -152,3 +152,63 @@ Responsibilities:
 - Summarize recommended actions
 - Prepare operational instructions
 
+#### 8.2 Reporting & Export
+
+Provides downloadable outputs for decision-makers.
+
+Possible formats:
+
+- CSV
+- Excel
+- PDF (if supported by the existing project)
+
+Exports may include:
+
+- Ward risk summaries
+- Resource allocation plans
+- Hospital routing recommendations
+- Dispatch reports
+- Intervention scenarios
+
+---
+
+### 9. Presentation Layer
+
+The Command Dashboard provides a unified interface for monitoring
+and decision-making.
+
+Dashboard components:
+
+- Dengue risk overview
+- Ward-level prioritization
+- Resource availability
+- Allocation recommendations
+- Hospital overflow information
+- Intervention simulation
+- Dispatch alerts
+- Export functionality
+
+The dashboard communicates with the underlying modules through
+the existing project architecture.
+
+---
+
+### 10. Offline Architecture
+
+The system is designed to run locally without requiring continuous
+internet connectivity.
+
+Offline-supported operations:
+
+- Dataset processing
+- Risk assessment using available local data
+- Resource allocation
+- Hospital overflow routing
+- Intervention simulation
+- Dispatch generation
+- Dashboard visualization
+- Data export
+
+External APIs are not required for core operational functionality.
+
+---
