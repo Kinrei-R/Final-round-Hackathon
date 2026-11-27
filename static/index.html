@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dengue dispatch engine</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Outbreak decision and dispatch engine</h1>
+    <p id="asof" class="sub">Loading forecast window</p>
+  </div>
+  <div class="top-actions">
+    <span id="mode" class="mode" role="status">MODE: 100% OFFLINE DETERMINISTIC ENGINE</span>
+    <button id="stressBtn" class="primary">Offline kill-switch and stress test</button>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="rail" aria-label="Controls">
+    <fieldset>
+      <legend>Scenario</legend>
+      <label class="radio"><input type="radio" name="scenario" value="peak" checked> <span id="lblPeak">Peak-season replay</span></label>
+      <label class="radio"><input type="radio" name="scenario" value="live"> <span id="lblLive">Live forecast</span></label>
+    </fieldset>
+    <label>City corporation
+      <select id="city"><option>All</option></select>
+    </label>
+    <label>Forecast basis
+      <select id="basis"><option value="expected">Expected cases</option><option value="upper">Upper bound (q90)</option></select>
+    </label>
+    <label>Available regional stock <output id="stockO">60%</output>
+      <input id="stock" type="range" min="30" max="100" step="5" value="60">
+    </label>
+    <label>Total spraying crews <output id="crewsO">40</output>
+      <input id="crews" type="range" min="10" max="120" step="1" value="40">
+    </label>
+    <label>Outbreak surge <output id="surgeO">1.0x</output>
+      <input id="surge" type="range" min="1" max="4" step="0.25" value="1">
+    </label>
+    <div class="legend" aria-label="Heatmap legend">
+      <span>Lower priority</span>
+      <i class="t0"></i><i class="t1"></i><i class="t2"></i><i class="t3"></i><i class="t4"></i><i class="t5"></i>
+      <span>Higher</span>
+      <p><b class="flag">!</b> Red base edge marks a ward with a critical deficit.</p>
+    </div>
+  </aside>
+
+  <main>
+    <section aria-labelledby="hHeat">
+      <h2 id="hHeat">Ward risk heatmap</h2>
+      <div id="heat" class="heat"></div>
+      <div id="totals" class="totals"></div>
+    </section>
+
+    <section aria-labelledby="hAlloc">
+      <h2 id="hAlloc">Scarcity allocation, highest priority first</h2>
+      <div class="scroll tall"><table id="alloc"></table></div>
+    </section>
+
+    <section aria-labelledby="hBeds">
+      <h2 id="hBeds">Intra-city bed routing</h2>
+      <div class="two">
+        <div><h3>Transfer manifest</h3><div class="scroll"><table id="xfer"></table></div></div>
+        <div><h3>City bed utilization</h3><table id="cityTbl"></table></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="hVec">
+      <h2 id="hVec">Vector-control simulator</h2>
+      <div class="simbar">
+        <label>Crews to auto-assign <input id="auto" type="number" min="1" max="180" value="12"></label>
+        <button id="autoBtn">Auto-assign crews</button>
+        <button id="selBtn">Simulate my selection</button>
+        <button id="clrBtn" class="ghost">Clear</button>
+      </div>
+      <div id="simTotals" class="totals"></div>
+      <div class="scroll tall"><table id="board"></table></div>
+    </section>
+
+    <section aria-labelledby="hDisp">
+      <h2 id="hDisp">Dispatch preview</h2>
+      <div class="simbar">
+        <label>Ward <select id="wardSel"></select></label>
+        <div class="tabs" role="tablist">
+          <button role="tab" data-tab="sms" aria-selected="true">SMS</button>
+          <button role="tab" data-tab="wa" aria-selected="false">WhatsApp</button>
+          <button role="tab" data-tab="doc" aria-selected="false">Commissioner brief</button>
+        </div>
+        <button id="copyBtn" class="ghost">Copy text</button>
+        <button id="printBtn" class="ghost">Print brief</button>
+      </div>
+      <div id="pane-sms" class="pane"><pre id="smsTxt" class="sms"></pre><p id="smsLen" class="sub"></p></div>
+      <div id="pane-wa" class="pane" hidden><pre id="waTxt" class="wa"></pre></div>
+      <div id="pane-doc" class="pane" hidden><iframe id="docFrame" title="Commissioner brief preview"></iframe></div>
+    </section>
+  </main>
+</div>
+
+<dialog id="stress">
+  <h2>Offline kill-switch and outbreak stress test</h2>
+  <p id="stressSum" class="sub"></p>
+  <ul id="stressList" class="checks"></ul>
+  <button id="stressClose" class="primary">Close</button>
+</dialog>
+<script src="/static/app.js"></script>
+</body>
+</html>
