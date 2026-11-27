@@ -54,3 +54,21 @@ Sources:
 The onsite Excel dataset serves as an additional data source.
 
 ---
+
+### 5. Data Processing Layer
+
+Responsibilities:
+
+- Load dataset
+- Validate data
+- Handle missing values
+- Standardize data formats
+- Extract relevant variables
+- Aggregate information by location/ward
+- Prepare structured data for downstream modules
+
+Output:
+
+Processed and standardized dengue-related data.
+
+---
