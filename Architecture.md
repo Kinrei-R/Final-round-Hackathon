@@ -136,3 +136,19 @@ Possible interventions:
 The simulator supports scenario comparison for decision-making.
 
 ---
+
+### 8. Operational Layer
+
+#### 8.1 Dispatch & Alert Generator
+
+Generates operational recommendations based on outputs from the
+decision modules.
+
+Responsibilities:
+
+- Create dispatch recommendations
+- Generate alerts for high-risk wards
+- Identify urgent resource requirements
+- Summarize recommended actions
+- Prepare operational instructions
+
