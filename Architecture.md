@@ -152,3 +152,22 @@ Responsibilities:
 - Summarize recommended actions
 - Prepare operational instructions
 
+#### 8.2 Reporting & Export
+
+Provides downloadable outputs for decision-makers.
+
+Possible formats:
+
+- CSV
+- Excel
+- PDF (if supported by the existing project)
+
+Exports may include:
+
+- Ward risk summaries
+- Resource allocation plans
+- Hospital routing recommendations
+- Dispatch reports
+- Intervention scenarios
+
+---
