@@ -56,3 +56,14 @@ Enables health officers to test targeted larvicide and fogging deployments befor
   * Hospital bed occupancy load
   * IV saline bag consumption
   * **Intervention ROI Ranking:** Automatically ranks all 60 wards by **Cases Prevented per Crew ($\text{ROI} = \frac{\Delta \text{Cases}}{\text{Crews Deployed}}$)** to guide high-leverage field deployment.
+
+### 4. Actionable Multi-Channel Dispatch Notifications
+Generates structured, ward-specific operational orders ready for immediate field distribution:
+* **SMS / WhatsApp Alerts:** Concise, character-optimized dispatch summaries for ward officers and rapid-response crew leads.
+* **Printable PDF / HTML Commissioner Briefs:** Formal situation reports detailing predicted cases, required vs. allocated supplies, deficit warnings, intra-city hospital overflow transfers, and assigned spraying teams.
+* **Pre-Generated Sample Exports:** Located in [`/exports`](./exports/) for offline inspection and verification.
+
+### 5. Offline Resilience & Deterministic Fallback
+Engineered to pass a live Wi-Fi / API kill-switch with zero crashes or degraded math:
+* **100% Local Execution:** All forecasting models, constrained linear/priority optimization solvers, intra-city overflow routing algorithms, counterfactual simulators, and template-based dispatch generators execute completely locally.
+* **Zero External Runtime Dependencies:** Does not rely on external LLM APIs or cloud endpoints for core calculations or notice generation.
