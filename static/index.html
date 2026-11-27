@@ -84,6 +84,26 @@
       </div>
     </section>
 
+    <section id="overflowCard" aria-labelledby="hOvf">
+      <h2 id="hOvf">Hospital overflow transfer suggestion</h2>
+      <p id="ovfStatus" class="sub">Slide Outbreak surge to 1.5x or higher to trigger nearest-hospital transfer suggestions.</p>
+      <div id="ovfBody" hidden>
+        <div class="simbar">
+          <label>Overflow route <select id="ovfSel"></select></label>
+          <div id="ovfTabs" class="tabs" role="tablist" aria-label="Overflow transfer format">
+            <button role="tab" data-ovftab="sms" aria-selected="true">SMS</button>
+            <button role="tab" data-ovftab="wa" aria-selected="false">WhatsApp</button>
+            <button role="tab" data-ovftab="doc" aria-selected="false">Transfer brief</button>
+          </div>
+          <button id="ovfCopyBtn" class="ghost" type="button">Copy text</button>
+          <button id="ovfPrintBtn" class="ghost" type="button">Print transfer brief</button>
+        </div>
+        <div id="ovf-pane-sms" class="pane"><pre id="ovfSmsTxt" class="sms"></pre><p id="ovfSmsLen" class="sub"></p></div>
+        <div id="ovf-pane-wa" class="pane" hidden><pre id="ovfWaTxt" class="wa"></pre></div>
+        <div id="ovf-pane-doc" class="pane" hidden><iframe id="ovfDocFrame" title="Hospital transfer brief preview"></iframe></div>
+      </div>
+    </section>
+
     <section aria-labelledby="hVec">
       <h2 id="hVec">Vector-control simulator</h2>
       <div class="simbar">
@@ -100,7 +120,7 @@
       <h2 id="hDisp">Dispatch preview</h2>
       <div class="simbar">
         <label>Ward <select id="wardSel"></select></label>
-        <div class="tabs" role="tablist">
+        <div id="dispTabs" class="tabs" role="tablist">
           <button role="tab" data-tab="sms" aria-selected="true">SMS</button>
           <button role="tab" data-tab="wa" aria-selected="false">WhatsApp</button>
           <button role="tab" data-tab="doc" aria-selected="false">Commissioner brief</button>

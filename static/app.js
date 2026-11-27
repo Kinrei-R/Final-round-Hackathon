@@ -11,7 +11,7 @@ const h = (tag, attrs = {}, ...kids) => {
   return e;
 };
 const DEFAULTS = { scenario: "peak", city: "All", basis: "expected", stock: 60, crews: 40, surge: 1, colorBy: "rank" };
-const S = { ...DEFAULTS, ward: null, plan: null, sim: null, fc: {}, asg: {}, tab: "sms", texts: {}, status: null };
+const S = { ...DEFAULTS, ward: null, plan: null, sim: null, fc: {}, asg: {}, tab: "sms", texts: {}, ovfTab: "sms", ovfTexts: {}, status: null };
 const q = () => `scenario=${S.scenario}&basis=${S.basis}&stock=${S.stock}&crews=${S.crews}&surge=${S.surge}`;
 const f1 = (x) => Number(x).toFixed(1), f2 = (x) => Number(x).toFixed(2);
 const pct = (a, r) => (r ? Math.round((100 * a) / r) : 100);
@@ -161,12 +161,87 @@ function downloadCsv() {
   document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+function buildOverflowMessages(m) {
+  const fromW = S.plan.wards.find((w) => w.ward_id === m.from) || {};
+  const toW = S.plan.wards.find((w) => w.ward_id === m.to) || {};
+  const d = S.plan.dates || {};
+  const win = d["2"] && d["4"] ? `${d["2"]} to ${d["4"]}` : "Active Forecast Window";
+
+  let sms = `DENGUE OVERFLOW [${m.city}]: ${m.from} beds full. Route ${m.patients} pts to ${m.to} hospital (nearest spare beds). Confirm intake.`;
+  if (sms.length > 160) sms = sms.slice(0, 157) + "...";
+
+  const wa = [
+    `*HOSPITAL OVERFLOW TRANSFER ORDER — ${m.city.toUpperCase()}*`,
+    `Forecast window: ${win} | Surge: ${Number(S.surge).toFixed(1)}x`,
+    ``,
+    `*Overflowing Facility:* ${m.from} (${fromW.cases ?? "-"} cases/wk, demand ${fromW.beds_req ?? "-"} / cap ${fromW.capacity ?? "-"} beds)`,
+    `*Nearest Receiving Hospital:* ${m.to} (demand ${toW.beds_req ?? "-"} / cap ${toW.capacity ?? "-"} beds)`,
+    `*Patients Authorized for Transfer:* ${m.patients}`,
+    ``,
+    `*Action Checklist:*`,
+    `- [ ] ${m.from}: Stabilize & dispatch ${m.patients} dengue patients`,
+    `- [ ] ${m.to}: Reserve ${m.patients} IV/isolation beds & confirm receipt`,
+    `- [ ] Control Room: Update intra-city bed ledger`
+  ].join("\n");
+
+  const doc = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Hospital transfer brief ${m.from} to ${m.to}</title><style>
+body{font:14px/1.5 Georgia,serif;color:#17231f;max-width:760px;margin:24px auto;padding:0 16px}
+h1{font-size:22px;margin:0} h2{font-size:15px;border-bottom:1px solid #17231f;margin-top:22px}
+.sub{color:#4f6168;font-size:13px;margin-top:2px}
+table{border-collapse:collapse;width:100%;margin-top:10px} td,th{border:1px solid #9aa8a0;padding:6px 8px;text-align:left}
+.alert{background:#b42318;color:#fff;padding:8px 12px;font-weight:bold;margin:12px 0}
+.sig{margin-top:36px;display:flex;gap:40px} .sig div{flex:1;border-top:1px solid #17231f;padding-top:4px}
+@media print{body{margin:0;max-width:none} .alert{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body>
+<h1>Intra-City Hospital Overflow Transfer Brief</h1>
+<div class="sub">${m.city} City Corporation &bull; Forecast window ${win} &bull; Surge ${Number(S.surge).toFixed(1)}x</div>
+<div class="alert">OVERFLOW ROUTING DIRECTIVE: TRANSFER ${m.patients} PATIENTS</div>
+<h2>Facility routing details</h2><table>
+<tr><th>Source Hospital (Saturated)</th><td><b>${m.from}</b> (Demand: ${fromW.beds_req ?? "-"} / Capacity: ${fromW.capacity ?? "-"} beds)</td></tr>
+<tr><th>Nearest Receiving Hospital (Spare Capacity)</th><td><b>${m.to}</b> (Demand: ${toW.beds_req ?? "-"} / Capacity: ${toW.capacity ?? "-"} beds)</td></tr>
+<tr><th>Authorized Transfer Volume</th><td><b>${m.patients} patients</b></td></tr>
+<tr><th>Jurisdiction Policy</th><td>Strict Intra-City Routing (${m.city} only)</td></tr>
+</table>
+<h2>Operational directive</h2>
+<p><b>${m.from}</b> has exceeded its inpatient dengue bed capacity. Duty officers must stabilize and transfer <b>${m.patients} patients</b> immediately to <b>${m.to}</b>, the nearest facility within ${m.city} with verified spare inpatient beds.</p>
+<div class="sig"><div>Sending Medical Officer (${m.from})</div><div>Receiving Registrar (${m.to})</div><div>City Health Commissioner</div></div>
+</body></html>`;
+
+  return { sms, wa, doc };
+}
+
+function renderOverflowDispatch(selectedIdx = 0) {
+  const mList = S.plan.manifest.filter((x) => S.city === "All" || x.city === S.city);
+  const statusEl = $("#ovfStatus");
+  const bodyEl = $("#ovfBody");
+  if (!mList.length) {
+    bodyEl.hidden = true;
+    statusEl.textContent = S.plan.unmet_beds
+      ? "All hospitals in this city are at 100% capacity — no spare receiving hospital available."
+      : "No hospital overflow at this surge level. Slide Outbreak surge to 1.5x or higher to trigger nearest-hospital transfer suggestions.";
+    return;
+  }
+  bodyEl.hidden = false;
+  statusEl.textContent = `${mList.length} overflow transfer route(s) active. Nearest intra-city receiving hospital selected automatically (click any manifest row to inspect).`;
+  const sel = $("#ovfSel");
+  sel.replaceChildren(...mList.map((m, idx) => h("option", { value: idx }, `${m.from} → ${m.to} (${m.patients} pts, ${m.city})`)));
+  const idx = Math.min(selectedIdx, mList.length - 1);
+  sel.value = String(idx);
+  S.ovfTexts = buildOverflowMessages(mList[idx]);
+  $("#ovfSmsTxt").textContent = S.ovfTexts.sms;
+  $("#ovfSmsLen").textContent = `${S.ovfTexts.sms.length} of 160 characters`;
+  $("#ovfWaTxt").textContent = S.ovfTexts.wa;
+  $("#ovfDocFrame").srcdoc = S.ovfTexts.doc;
+}
+
 function renderBeds() {
   const m = S.plan.manifest.filter((x) => S.city === "All" || x.city === S.city);
   if (!m.length) $("#xfer").replaceChildren(h("caption", { class: "sub", style: "padding:10px;text-align:left" }, S.plan.unmet_beds ? "No ward has spare beds to receive transfers." : "No transfers needed at this load. Raise the surge to test overflow."));
-  else table($("#xfer"), [["From ward"], ["To ward"], ["City"], ["Patients", 1]], m.map((x) => ({ cells: [x.from, x.to, x.city, x.patients] })));
+  else table($("#xfer"), [["From ward"], ["To ward"], ["City"], ["Patients", 1]], m.map((x, idx) => ({ id: idx, cells: [x.from, x.to, x.city, x.patients] })), (idx) => renderOverflowDispatch(idx));
   table($("#cityTbl"), [["City"], ["Demand", 1], ["Capacity", 1], ["Utilization", 1], ["Routed", 1], ["Unmet", 1]],
     S.plan.cities.filter((c) => S.city === "All" || c.city === S.city).map((c) => ({ cells: [c.city, c.demand, c.capacity, `${f1(c.utilization_pct)}%`, c.routed, c.unmet] })));
+  renderOverflowDispatch(0);
 }
 
 function renderBoard() {
@@ -277,9 +352,25 @@ async function init() {
   $("#selBtn").addEventListener("click", safe(() => loadBoard({ assignments: Object.fromEntries(Object.entries(S.asg).filter(([, k]) => k > 0)) })));
   $("#clrBtn").addEventListener("click", safe(async () => { S.asg = {}; await loadBoard({}); }));
   $("#csvBtn").addEventListener("click", downloadCsv);
-  document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => {
+  $("#ovfSel").addEventListener("change", (e) => renderOverflowDispatch(+e.target.value));
+  document.querySelectorAll("#ovfTabs button").forEach((b) => b.addEventListener("click", () => {
+    S.ovfTab = b.dataset.ovftab;
+    document.querySelectorAll("#ovfTabs button").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+    ["sms", "wa", "doc"].forEach((t) => { $(`#ovf-pane-${t}`).hidden = t !== S.ovfTab; });
+  }));
+  $("#ovfCopyBtn").addEventListener("click", async () => {
+    const btn = $("#ovfCopyBtn"), text = S.ovfTab === "doc" ? "" : (S.ovfTexts[S.ovfTab] || "");
+    if (S.ovfTab === "doc") { toast("Use Print transfer brief to print or save the transfer directive as PDF."); return; }
+    try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; } catch (e) { toast("Copy was blocked by the browser. Select the text and copy it manually."); }
+    setTimeout(() => { btn.textContent = "Copy text"; }, 1500);
+  });
+  $("#ovfPrintBtn").addEventListener("click", () => {
+    document.querySelector('#ovfTabs button[data-ovftab="doc"]').click();
+    const w = $("#ovfDocFrame").contentWindow; w.focus(); w.print();
+  });
+  document.querySelectorAll("#dispTabs button").forEach((b) => b.addEventListener("click", () => {
     S.tab = b.dataset.tab;
-    document.querySelectorAll(".tabs button").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+    document.querySelectorAll("#dispTabs button").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
     ["sms", "wa", "doc"].forEach((t) => { $(`#pane-${t}`).hidden = t !== S.tab; });
   }));
   $("#copyBtn").addEventListener("click", async () => {
@@ -289,7 +380,7 @@ async function init() {
     setTimeout(() => { btn.textContent = "Copy text"; }, 1500);
   });
   $("#printBtn").addEventListener("click", () => {
-    document.querySelector('.tabs button[data-tab="doc"]').click();
+    document.querySelector('#dispTabs button[data-tab="doc"]').click();
     const w = $("#docFrame").contentWindow; w.focus(); w.print();
   });
   $("#stressBtn").addEventListener("click", runStress);

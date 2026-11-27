@@ -18,6 +18,10 @@ def ceil(x):
     return int(math.ceil(x - 1e-9))
 
 
+def _ward_num(wid):
+    return int("".join(ch for ch in wid if ch.isdigit()) or 0)
+
+
 def intervene(wl, san, k):
     """Environmental perturbation for k crews (scalar or pandas Series)."""
     import numpy as np
@@ -85,7 +89,7 @@ def allocate(rows, stock_pct, crews):
 
 # ------------------------------------------------------------- routing
 def route_beds(rows):
-    """Greedy donor->receiver transfers strictly inside each city corporation."""
+    """Greedy donor->receiver transfers strictly inside each city corporation (nearest spare capacity tie-break)."""
     manifest, cities, info = [], [], {}
     for city in sorted({r["city"] for r in rows}):
         cw = [r for r in rows if r["city"] == city]
@@ -100,7 +104,7 @@ def route_beds(rows):
                 cand = [w for w in spare if spare[w] > 0 and w != d]
                 if not cand:
                     break
-                t = min(cand, key=lambda w: (-spare[w], w))
+                t = min(cand, key=lambda w: (-spare[w], abs(_ward_num(w) - _ward_num(d)), w))
                 n = min(need, spare[t])
                 spare[t] -= n
                 need -= n
