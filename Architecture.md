@@ -278,3 +278,15 @@ Existing Phase 1 files and modules should be preserved
 and reused wherever possible.
 
 ---
+### 14. Expected Outcome
+
+The final system provides a unified decision-support workflow
+for dengue outbreak response.
+
+It transforms available dengue data into actionable information
+through risk assessment, resource allocation, hospital routing,
+intervention simulation, dispatch recommendations, and dashboard
+visualization.
+
+The architecture emphasizes modularity, operational usefulness,
+offline resilience, and integration with the existing Phase 1 system.
