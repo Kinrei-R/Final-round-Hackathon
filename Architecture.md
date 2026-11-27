@@ -72,3 +72,18 @@ Output:
 Processed and standardized dengue-related data.
 
 ---
+
+### 6. Ward Data Engine
+
+The Ward Data Engine combines available information from the
+dataset and existing prediction system.
+
+Responsibilities:
+
+- Organize data by ward/location
+- Identify high-risk areas
+- Generate ward-level indicators
+- Prepare input for resource allocation
+- Provide data to the dashboard
+
+---
