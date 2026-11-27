@@ -67,3 +67,23 @@ Generates structured, ward-specific operational orders ready for immediate field
 Engineered to pass a live Wi-Fi / API kill-switch with zero crashes or degraded math:
 * **100% Local Execution:** All forecasting models, constrained linear/priority optimization solvers, intra-city overflow routing algorithms, counterfactual simulators, and template-based dispatch generators execute completely locally.
 * **Zero External Runtime Dependencies:** Does not rely on external LLM APIs or cloud endpoints for core calculations or notice generation.
+
+---
+
+## Repository Structure
+
+```text
+├── data/                         # Onsite 60-ward dataset & ward capacity metadata
+├── models/                       # Serialized Phase 1/2 local forecasting & simulation artifacts
+├── src/
+│   ├── forecasting/              # Local deterministic ML inference pipeline
+│   ├── allocation/               # Constrained resource & crew prioritization engine
+│   ├── routing/                  # Intra-city hospital overflow & headroom solver
+│   ├── simulator/                # 2-to-4 week vector control counterfactual & ROI ranker
+│   └── dispatch/                 # Offline SMS/WhatsApp & HTML/PDF brief generator
+├── exports/                      # Sample generated SMS, WhatsApp, and HTML/PDF ward briefs
+├── app.py / frontend/            # Interactive Command Center UI
+├── ARCHITECTURE.md               # Detailed system architecture, math formulas & AI disclosure
+├── README.md                     # Project documentation (this file)
+└── requirements.txt              # Local Python/Node dependencies
+```
