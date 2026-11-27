@@ -102,3 +102,18 @@ Engineered to pass a live Wi-Fi / API kill-switch with zero crashes or degraded 
 git clone <YOUR_PHASE_1_REPO_URL>
 cd <REPO_DIRECTORY>
 git checkout version-onsite-final
+
+# 2. Create a virtual environment and install dependencies
+python -m venv .venv
+source .venv/bin/activate        # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+# 3. Launch the Command Center locally
+streamlit run app.py             # Or: uvicorn src.main:app --reload
+```
+
+### Verifying Offline Kill-Switch Mode
+1. Disconnect Wi-Fi / disable network interfaces on the host machine.
+2. Adjust the **Available Regional Stock (30%–100%)** and **Total Spraying Crews** controls.
+3. Run an intra-city overflow calculation and a 2-to-4-week vector control simulation.
+4. Export a ward SMS/WhatsApp alert and printable commissioner brief—all operations complete locally in `< 200ms`.
