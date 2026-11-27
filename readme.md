@@ -1,127 +1,95 @@
-# Dengue Operational Response & Resource Command System (Phase 2)
+# dengue-ews: Urban Vector-Borne Outbreak Decision & Resource Dispatch Engine
 
-> **EDU AI Engineering Hackathon 2026 — 10-Hour Onsite Final (`version-onsite-final`)**  
-> Extending our Phase 1 Dengue Early Warning System across **60 urban wards** in Bangladesh into a deterministic, offline-resilient resource optimization, hospital overflow routing, vector-control simulation, and multi-channel dispatch platform.
+BLUEPINE
 
----
+Offline-first forecasting and dispatch for 60 wards in 5 Bangladesh city corporations. FastAPI + scikit-learn + vanilla HTML/CSS/JS. No CDNs, no cloud APIs, no LLM calls at runtime.
 
-## Live Deployment & Repository Continuity
+## Setup
 
-* **Live Application URL:** `[INSERT_LIVE_DEPLOYED_URL]`
-* **Walkthrough Video (07:00 Uncut):** `[INSERT_UNLISTED_VIDEO_URL]`
-* **Git Tag / Commit Convention:** Continuous history extending Phase 1 (`version-onsite-final`)
-* **Dataset:** `bangladesh dengue large dataset onsite` (60 urban wards across **Dhaka North, Dhaka South, Chattogram, Gazipur, and Narayanganj**)
-
----
-
-## Overview
-
-Forecasting dengue outbreaks two weeks in advance only saves lives if municipal commissioners and health center managers can translate predictions into immediate logistics. This Phase 2 system bridges predictive ML with real-time public health operations across all 60 wards through five integrated modules:
-
-1. **Constrained Resource Allocation Engine**
-2. **Hospital Surge & Cross-Ward Overflow Routing**
-3. **"What-If" Vector Control Impact Simulator**
-4. **Actionable Multi-Channel Dispatch Notifications**
-5. **100% Offline Resilience & Deterministic Fallback**
-
----
-
-## Core Modules & Operational Architecture
-
-### 1. Constrained Resource Allocation Engine
-Converts ward-level predicted cases and risk classifications into exact logistical requirements and vector-control crew assignments under real-world supply constraints:
-* **Calculated Resource Demands:**
-  * `saline_bags_needed`
-  * `diagnostic_kits_needed`
-  * `hospital_beds_required`
-  * `spraying_crews_assigned`
-  * **Interactive Scarcity Controls:** Live sliders allow officers to adjust **Available Regional Stock (`30%` – `100%`)** and **Total Spraying Crews**.
-* **Risk & Density Prioritization:** Under scarcity ($<100\%$ stock), supplies and crews are dynamically prioritized using a weighted urgency score combining predicted outbreak risk tier and `population_density_sqkm`.
-* **Live Deficit Alerts:** Automatically flags critical ward-level supply deficits whenever allocated inventory falls below $100\%$ of projected demand.
-
-### 2. Hospital Surge & Cross-Ward Overflow Routing
-Prevents localized hospital collapse during case surges while respecting municipal administrative boundaries:
-* **Intra-City Patient Routing:** Identifies wards where `hospital_beds_required` exceeds local bed capacity and automatically routes overflow patients to lower-burden wards strictly **within the same city pool**:
-* Dhaka North
-  * Dhaka South
-  * Chattogram
-  * Gazipur
-  * Narayanganj
-* **Net Deficit & Headroom Reporting:** Displays pre-transfer shortages, ward-to-ward transfer manifests, remaining city-wide bed headroom, and net unabsorbable city deficits if total municipal capacity is breached.
-
-### 3. "What-If" Vector Control Impact Simulator
-Enables health officers to test targeted larvicide and fogging deployments before dispatching field teams:
-* **Counterfactual Intervention Modeling:** Simulates deploying a limited pool of spraying crews to selected wards and computes the **2-to-4-week downstream reduction** in:
-  * Projected dengue cases
-  * Hospital bed occupancy load
-  * IV saline bag consumption
-  * **Intervention ROI Ranking:** Automatically ranks all 60 wards by **Cases Prevented per Crew ($\text{ROI} = \frac{\Delta \text{Cases}}{\text{Crews Deployed}}$)** to guide high-leverage field deployment.
-
-### 4. Actionable Multi-Channel Dispatch Notifications
-Generates structured, ward-specific operational orders ready for immediate field distribution:
-* **SMS / WhatsApp Alerts:** Concise, character-optimized dispatch summaries for ward officers and rapid-response crew leads.
-* **Printable PDF / HTML Commissioner Briefs:** Formal situation reports detailing predicted cases, required vs. allocated supplies, deficit warnings, intra-city hospital overflow transfers, and assigned spraying teams.
-* **Pre-Generated Sample Exports:** Located in [`/exports`](./exports/) for offline inspection and verification.
-
-### 5. Offline Resilience & Deterministic Fallback
-Engineered to pass a live Wi-Fi / API kill-switch with zero crashes or degraded math:
-* **100% Local Execution:** All forecasting models, constrained linear/priority optimization solvers, intra-city overflow routing algorithms, counterfactual simulators, and template-based dispatch generators execute completely locally.
-* **Zero External Runtime Dependencies:** Does not rely on external LLM APIs or cloud endpoints for core calculations or notice generation.
-
----
-
-## Repository Structure
-
-```text
-├── data/                         # Onsite 60-ward dataset & ward capacity metadata
-├── models/                       # Serialized Phase 1/2 local forecasting & simulation artifacts
-├── src/
-│   ├── forecasting/              # Local deterministic ML inference pipeline
-│   ├── allocation/               # Constrained resource & crew prioritization engine
-│   ├── routing/                  # Intra-city hospital overflow & headroom solver
-│   ├── simulator/                # 2-to-4 week vector control counterfactual & ROI ranker
-│   └── dispatch/                 # Offline SMS/WhatsApp & HTML/PDF brief generator
-├── exports/                      # Sample generated SMS, WhatsApp, and HTML/PDF ward briefs
-├── app.py / frontend/            # Interactive Command Center UI
-├── ARCHITECTURE.md               # Detailed system architecture, math formulas & AI disclosure
-├── README.md                     # Project documentation (this file)
-└── requirements.txt              # Local Python/Node dependencies
-```
-
----
-
-## Quickstart & Local Setup (Offline-Ready)
-
-### Prerequisites
-* Python `3.10+` (or Node `18+` if running a separate frontend)
-* All model weights and datasets bundled locally—no internet connection required after dependency installation.
-
-### Installation & Execution
 ```bash
-# 1. Clone the repository and checkout the onsite tag
-git clone <YOUR_PHASE_1_REPO_URL>
-cd <REPO_DIRECTORY>
-git checkout version-onsite-final
-
-# 2. Create a virtual environment and install dependencies
-python -m venv .venv
-source .venv/bin/activate        # On Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-
-# 3. Launch the Command Center locally
-streamlit run app.py             # Or: uvicorn src.main:app --reload
 ```
 
-### Verifying Offline Kill-Switch Mode
-1. Disconnect Wi-Fi / disable network interfaces on the host machine.
-2. Adjust the **Available Regional Stock (30%–100%)** and **Total Spraying Crews** controls.
-3. Run an intra-city overflow calculation and a 2-to-4-week vector control simulation.
-4. Export a ward SMS/WhatsApp alert and printable commissioner brief—all operations complete locally in `< 200ms`.
+Trained artifacts are included in `artifacts/`. To retrain from the workbook (about 1 minute):
 
----
+```bash
+python -m src.train
+```
 
-## Documentation & Compliance Checklist
+## Run
 
-* [x] **Continuous Phase 1 Repository:** Built directly on top of Phase 1 commit history using `version-onsite-final`.
-* [x] **Architecture & AI Disclosure:** Full mathematical formulations for scarcity prioritization, overflow routing, counterfactual decay rates, and AI tool usage disclosure documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
-* [x] **Sample Dispatch Exports:** Ready-to-review SMS, WhatsApp, and printable commissioner briefs included in [`/exports`](./exports/).
+```bash
+uvicorn app:app --host 127.0.0.1 --port 8000
+python generate_exports.py        # writes exports/ (SMS, WhatsApp, 2 commissioner briefs)
+```
+
+Open http://127.0.0.1:8000
+
+## Layout
+
+```
+app.py                  FastAPI routes + kill-switch stress test
+generate_exports.py     sample dispatch exports
+src/features.py         lags 0-8 (rain, temp, humidity), interactions, seasonality
+src/train.py            chronological HistGradientBoosting: Poisson mean + q10/q90, h = 2, 3, 4
+src/inference.py        forecasts, ML counterfactual effects, precomputed fallback
+src/operations.py       demand, allocation, bed routing, simulator, dispatch templates
+static/                 index.html, styles.css, app.js (all local)
+artifacts/              .joblib models, forecasts, effects, metadata
+data/                   bangladesh_dengue_large_dataset_onsite.xlsx
+exports/                generated samples
+```
+
+## Dataset
+
+31,320 rows, 60 wards, 5 cities, 522 weeks (2016-01-04 to 2025-12-29). Weekly `dengue_cases`: median 0, p90 9, max 41.
+
+## Command center walkthrough
+
+| Control / panel | What it does |
+|---|---|
+| Scenario | Peak-season replay (origin 2025-06-09, out-of-sample models) or Live (origin 2025-12-29, off-season, near-zero forecast) |
+| Regional stock 30%-100% | Per-city saline and kit pools; wards served in priority order until empty |
+| Spraying crews 10-120 | Global crew pool, same priority order |
+| Outbreak surge 1x-4x | Scales forecasts to stress allocation and bed routing |
+| Ward risk heatmap | Tile color = priority rank; red base edge = CRITICAL DEFICIT |
+| Allocation table | Allocated / required per resource, exact shortfalls |
+| Bed routing | Transfer manifest, city utilization, unmet beds (same-city only) |
+| Vector simulator | 0-3 crews per ward or auto-assign; cases prevented, beds freed, saline saved, ROI; all 60 wards ranked |
+| Dispatch preview | SMS (<= 160), WhatsApp brief, printable commissioner brief |
+| Offline kill-switch and stress test | Runs the whole pipeline with every outbound connection blocked, then reports 9 checks |
+
+Tip: set surge to 1.5x to see transfers and unmet beds together.
+
+## API
+
+`GET /api/status` | `GET /api/forecast` | `GET /api/operations` | `GET /api/routing` | `POST /api/vector-simulate` | `GET /api/dispatch/{ward_id}` | `GET /api/dispatch/{ward_id}/brief` | `GET /api/stress-test`
+
+## Verify offline
+
+1. Turn Wi-Fi off, start the server, click **Offline kill-switch and stress test**: expect PASS on all checks.
+2. `grep -rEn "https?://" static/` returns nothing.
+3. DevTools, Network tab: all requests go to 127.0.0.1.
+
+## Git convention
+
+Every commit message must contain `version-onsite-final`:
+
+```bash
+git add -A
+git commit -m "feat: phase 2 dispatch engine [version-onsite-final]"
+```
+
+## Known limits
+
+- Live scenario forecasts are near zero because the dataset ends in the off-season; use the peak replay for demonstrations.
+- q10-q90 intervals cover about 92-93% of holdout weeks (zero-inflated counts make them wider than 80%).
+- The counterfactual uses a model-driven path and a deterministic fallback; effects are modeled, not measured field results.
+
+## AI Disclosure
+
+- Parts of this code and documentation were drafted with Claude (Anthropic), then run and checked by the authors.
+- No AI service is called at runtime. Forecasts come from locally trained scikit-learn models; dispatch text comes from fixed templates.
+- Outputs are decision support, not medical or operational orders. Qualified public-health staff must review them before action.
+- The human authors remain responsible for the data, code, and results.
