@@ -87,3 +87,18 @@ Engineered to pass a live Wi-Fi / API kill-switch with zero crashes or degraded 
 ├── README.md                     # Project documentation (this file)
 └── requirements.txt              # Local Python/Node dependencies
 ```
+
+---
+
+## Quickstart & Local Setup (Offline-Ready)
+
+### Prerequisites
+* Python `3.10+` (or Node `18+` if running a separate frontend)
+* All model weights and datasets bundled locally—no internet connection required after dependency installation.
+
+### Installation & Execution
+```bash
+# 1. Clone the repository and checkout the onsite tag
+git clone <YOUR_PHASE_1_REPO_URL>
+cd <REPO_DIRECTORY>
+git checkout version-onsite-final
