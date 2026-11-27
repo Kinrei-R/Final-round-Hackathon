@@ -107,3 +107,17 @@ Outputs:
 - Resource allocation recommendations
 - Priority wards
 - Allocation summaries
+
+#### 7.2 Hospital Overflow Routing
+
+Identifies alternative hospitals when a hospital reaches or exceeds
+its available capacity.
+
+Responsibilities:
+
+- Monitor capacity
+- Identify overloaded hospitals
+- Find alternative hospitals within the same city
+- Recommend suitable destinations
+- Provide routing recommendations
+
