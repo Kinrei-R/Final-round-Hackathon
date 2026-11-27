@@ -228,3 +228,23 @@ External APIs are not required for core operational functionality.
 11. Reports are exported when required.
 
 ---
+
+### 12. Integration Strategy
+
+The onsite implementation extends the existing Phase 1 system.
+
+Integration steps:
+
+1. Inspect the existing project structure.
+2. Identify current prediction and dashboard modules.
+3. Preserve existing functionality.
+4. Add the onsite dataset processing component.
+5. Integrate the ward data engine.
+6. Connect resource allocation and routing modules.
+7. Integrate the intervention simulator.
+8. Connect dispatch and export functionality.
+9. Test offline functionality.
+10. Validate the complete workflow.
+
+---
+
