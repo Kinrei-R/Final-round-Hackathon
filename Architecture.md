@@ -107,3 +107,48 @@ Outputs:
 - Resource allocation recommendations
 - Priority wards
 - Allocation summaries
+
+#### 7.2 Hospital Overflow Routing
+
+Identifies alternative hospitals when a hospital reaches or exceeds
+its available capacity.
+
+Responsibilities:
+
+- Monitor capacity
+- Identify overloaded hospitals
+- Find alternative hospitals within the same city
+- Recommend suitable destinations
+- Provide routing recommendations
+
+#### 7.3 Vector Control Simulator
+
+Simulates possible vector-control interventions and their potential
+impact on dengue risk.
+
+Possible interventions:
+
+- Targeted mosquito-control operations
+- High-risk ward prioritization
+- Intervention coverage adjustment
+- Resource distribution scenarios
+
+The simulator supports scenario comparison for decision-making.
+
+---
+
+### 8. Operational Layer
+
+#### 8.1 Dispatch & Alert Generator
+
+Generates operational recommendations based on outputs from the
+decision modules.
+
+Responsibilities:
+
+- Create dispatch recommendations
+- Generate alerts for high-risk wards
+- Identify urgent resource requirements
+- Summarize recommended actions
+- Prepare operational instructions
+
