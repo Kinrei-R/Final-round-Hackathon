@@ -3,20 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dengue dispatch engine</title>
+<title>Command center | dengue-ews</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+<a class="skip" href="#content">Skip to results</a>
 <header class="top">
-  <div>
-    <h1>Outbreak decision and dispatch engine</h1>
+  <div class="title">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>dengue-ews</a>
+    <h1>Command center</h1>
     <p id="asof" class="sub">Loading forecast window</p>
   </div>
   <div class="top-actions">
     <span id="mode" class="mode" role="status">MODE: 100% OFFLINE DETERMINISTIC ENGINE</span>
+    <a class="linkbtn" href="/">Overview</a>
     <button id="stressBtn" class="primary">Offline kill-switch and stress test</button>
   </div>
 </header>
+<div id="progress" class="progress" aria-hidden="true"></div>
+<div id="toast" class="toast" role="alert" hidden></div>
 
 <div class="shell">
   <aside class="rail" aria-label="Controls">
@@ -40,23 +46,33 @@
     <label>Outbreak surge <output id="surgeO">1.0x</output>
       <input id="surge" type="range" min="1" max="4" step="0.25" value="1">
     </label>
+    <label>Color heatmap by
+      <select id="colorBy"><option value="rank">Priority rank</option><option value="cases">Expected cases per week</option></select>
+    </label>
+    <button id="resetBtn" class="ghost" type="button">Reset controls</button>
     <div class="legend" aria-label="Heatmap legend">
-      <span>Lower priority</span>
+      <span id="legLo">Lower priority</span>
       <i class="t0"></i><i class="t1"></i><i class="t2"></i><i class="t3"></i><i class="t4"></i><i class="t5"></i>
-      <span>Higher</span>
+      <span id="legHi">Higher</span>
       <p><b class="flag">!</b> Red base edge marks a ward with a critical deficit.</p>
     </div>
   </aside>
 
-  <main>
+  <main id="content" tabindex="-1">
     <section aria-labelledby="hHeat">
       <h2 id="hHeat">Ward risk heatmap</h2>
-      <div id="heat" class="heat"></div>
-      <div id="totals" class="totals"></div>
+      <div id="kpis" class="kpis" aria-live="polite"></div>
+      <div class="heatgrid">
+        <div id="heat" class="heat"></div>
+        <aside id="detail" class="detail" aria-labelledby="hDetail">
+          <h3 id="hDetail">Selected ward</h3>
+          <div id="detailBody"></div>
+        </aside>
+      </div>
     </section>
 
     <section aria-labelledby="hAlloc">
-      <h2 id="hAlloc">Scarcity allocation, highest priority first</h2>
+      <div class="sechead"><h2 id="hAlloc">Scarcity allocation, highest priority first</h2><button id="csvBtn" class="ghost" type="button">Download CSV</button></div>
       <div class="scroll tall"><table id="alloc"></table></div>
     </section>
 
@@ -64,7 +80,7 @@
       <h2 id="hBeds">Intra-city bed routing</h2>
       <div class="two">
         <div><h3>Transfer manifest</h3><div class="scroll"><table id="xfer"></table></div></div>
-        <div><h3>City bed utilization</h3><table id="cityTbl"></table></div>
+        <div><h3>City bed utilization</h3><div class="scroll"><table id="cityTbl"></table></div></div>
       </div>
     </section>
 

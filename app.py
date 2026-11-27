@@ -8,7 +8,8 @@ import threading
 import time
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -18,16 +19,33 @@ from src.inference import Engine
 
 ROOT = Path(__file__).parent
 MODE = "MODE: 100% OFFLINE DETERMINISTIC ENGINE"
+TEXT_ASSETS = {".html", ".css", ".js", ".svg", ".json", ".txt"}
 SCEN = "^(live|peak)$"
 BASIS = "^(expected|upper)$"
+# Everything is served from this origin: no CDNs, fonts, or remote frames are ever needed.
+CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+       "connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'")
 app = FastAPI(title="dengue-ews: Urban Vector-Borne Outbreak Decision & Resource Dispatch Engine")
-_engines, _lock = {}, threading.Lock()
+app.add_middleware(GZipMiddleware, minimum_size=1024)
+_engines, _lock, _eng_lock = {}, threading.Lock(), threading.Lock()
+
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    resp = await call_next(request)
+    resp.headers["Content-Security-Policy"] = CSP
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["Referrer-Policy"] = "no-referrer"
+    if request.url.path.startswith("/api/"):
+        resp.headers["Cache-Control"] = "no-store"
+    return resp
 
 
 def eng(scenario="peak"):
-    if scenario not in _engines:
-        _engines[scenario] = Engine(ROOT / "artifacts", scenario)
-    return _engines[scenario]
+    with _eng_lock:  # two first requests must not both load the model files
+        if scenario not in _engines:
+            _engines[scenario] = Engine(ROOT / "artifacts", scenario)
+        return _engines[scenario]
 
 
 def dates_of(e):
@@ -40,6 +58,11 @@ def make_plan(scenario, stock, crews, basis, surge):
 
 
 # ------------------------------------------------------------------ API
+@app.get("/api/health")
+def health():
+    return dict(ok=True, mode=MODE, engine={s: eng(s).mode for s in ("live", "peak")})
+
+
 @app.get("/api/status")
 def status():
     meta = eng("live").meta
@@ -187,11 +210,12 @@ def stress_test(scenario: str = Query("peak", pattern=SCEN), surge: float = Quer
 
     with _lock:
         ext = []
-        for f in sorted((ROOT / "static").glob("*")):
+        scanned = [f for f in sorted((ROOT / "static").glob("*")) if f.suffix in TEXT_ASSETS]
+        for f in scanned:
             for m in re.findall(r"""(?:https?:)?//[^\s"'<>)]+""", f.read_text(encoding="utf-8", errors="ignore")):
                 if not re.match(r"(?:https?:)?//(127\.0\.0\.1|localhost)", m):
                     ext.append(f"{f.name}: {m[:60]}")
-        chk("static assets contain no external URLs or CDNs", not ext, "; ".join(ext[:3]) or f"{len(list((ROOT / 'static').glob('*')))} local files scanned")
+        chk("static assets contain no external URLs or CDNs", not ext, "; ".join(ext[:3]) or f"{len(scanned)} local files scanned")
         with NetworkGuard() as g:
             e, p, sim, disp = pipeline(scenario, stock, crews, surge)
             _, p2, sim2, disp2 = pipeline(scenario, stock, crews, surge)
@@ -232,7 +256,12 @@ def stress_test(scenario: str = Query("peak", pattern=SCEN), surge: float = Quer
 
 # ---------------------------------------------------------------- static
 @app.get("/")
-def index():
+def landing():
+    return FileResponse(ROOT / "static" / "landing.html")
+
+
+@app.get("/app")
+def command_center():
     return FileResponse(ROOT / "static" / "index.html")
 
 

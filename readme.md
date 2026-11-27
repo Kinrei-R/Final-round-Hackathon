@@ -24,7 +24,7 @@ uvicorn app:app --host 127.0.0.1 --port 8000
 python generate_exports.py        # writes exports/ (SMS, WhatsApp, 2 commissioner briefs)
 ```
 
-Open http://127.0.0.1:8000
+Open http://127.0.0.1:8000 for the overview page and http://127.0.0.1:8000/app for the command center.
 
 ## Layout
 
@@ -35,10 +35,18 @@ src/features.py         lags 0-8 (rain, temp, humidity), interactions, seasonali
 src/train.py            chronological HistGradientBoosting: Poisson mean + q10/q90, h = 2, 3, 4
 src/inference.py        forecasts, ML counterfactual effects, precomputed fallback
 src/operations.py       demand, allocation, bed routing, simulator, dispatch templates
-static/                 index.html, styles.css, app.js (all local)
+static/                 landing.html/css/js (overview), index.html + styles.css + app.js (command center), all local
+tests/                  pytest suite: allocation, routing, simulator, fallback engine, API
 artifacts/              .joblib models, forecasts, effects, metadata
 data/                   bangladesh_dengue_large_dataset_onsite.xlsx
 exports/                generated samples
+```
+
+## Test
+
+```bash
+pip install -r requirements-dev.txt
+pytest -q          # API tests are skipped automatically if fastapi/httpx are missing
 ```
 
 ## Dataset
@@ -58,13 +66,16 @@ exports/                generated samples
 | Bed routing | Transfer manifest, city utilization, unmet beds (same-city only) |
 | Vector simulator | 0-3 crews per ward or auto-assign; cases prevented, beds freed, saline saved, ROI; all 60 wards ranked |
 | Dispatch preview | SMS (<= 160), WhatsApp brief, printable commissioner brief |
+| Color heatmap by | Priority rank, or expected cases per week (honest in quiet seasons) |
+| KPI strip and selected-ward panel | Fill rates, deficits, unmet beds; forecast range chart, supply and bed routing for the chosen ward |
+| Download CSV | Allocation table for the current filters |
 | Offline kill-switch and stress test | Runs the whole pipeline with every outbound connection blocked, then reports 9 checks |
 
 Tip: set surge to 1.5x to see transfers and unmet beds together.
 
 ## API
 
-`GET /api/status` | `GET /api/forecast` | `GET /api/operations` | `GET /api/routing` | `POST /api/vector-simulate` | `GET /api/dispatch/{ward_id}` | `GET /api/dispatch/{ward_id}/brief` | `GET /api/stress-test`
+`GET /` overview page | `GET /app` command center | `GET /api/health` | `GET /api/status` | `GET /api/forecast` | `GET /api/operations` | `GET /api/routing` | `POST /api/vector-simulate` | `GET /api/dispatch/{ward_id}` | `GET /api/dispatch/{ward_id}/brief` | `GET /api/stress-test`
 
 ## Verify offline
 
@@ -80,6 +91,13 @@ Every commit message must contain `version-onsite-final`:
 git add -A
 git commit -m "feat: phase 2 dispatch engine [version-onsite-final]"
 ```
+
+## Front-end notes
+
+- Controls are remembered in the browser (localStorage, optional) and `Reset controls` restores defaults.
+- Responses use a strict Content-Security-Policy (`default-src 'self'`), so a stray CDN link would be blocked as well as caught by the stress test.
+- Out-of-order responses are discarded, so dragging a slider quickly never shows stale numbers.
+- `/app#stress` opens the stress test directly.
 
 ## Known limits
 
