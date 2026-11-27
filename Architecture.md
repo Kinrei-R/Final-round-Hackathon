@@ -212,3 +212,19 @@ Offline-supported operations:
 External APIs are not required for core operational functionality.
 
 ---
+
+### 11. Data Flow
+
+1. The onsite dataset is loaded.
+2. Data is validated and processed.
+3. Processed data is combined with existing Phase 1 outputs.
+4. Ward-level indicators are generated.
+5. Risk and priority information is prepared.
+6. Resource allocation is calculated.
+7. Hospital overflow routing is performed.
+8. Vector-control scenarios are simulated.
+9. Dispatch recommendations and alerts are generated.
+10. Results are displayed on the dashboard.
+11. Reports are exported when required.
+
+---
