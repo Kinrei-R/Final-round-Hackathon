@@ -40,3 +40,17 @@ The system consists of the following layers:
 6. Local Storage & Export Layer
 
 ---
+
+### 4. Data Layer
+
+Sources:
+
+- Existing Phase 1 prediction outputs
+- Onsite dengue dataset
+- Hospital/resource information
+- Ward/location information
+- Operational input parameters
+
+The onsite Excel dataset serves as an additional data source.
+
+---
