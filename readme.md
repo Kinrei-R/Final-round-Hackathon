@@ -117,3 +117,11 @@ streamlit run app.py             # Or: uvicorn src.main:app --reload
 2. Adjust the **Available Regional Stock (30%–100%)** and **Total Spraying Crews** controls.
 3. Run an intra-city overflow calculation and a 2-to-4-week vector control simulation.
 4. Export a ward SMS/WhatsApp alert and printable commissioner brief—all operations complete locally in `< 200ms`.
+
+---
+
+## Documentation & Compliance Checklist
+
+* [x] **Continuous Phase 1 Repository:** Built directly on top of Phase 1 commit history using `version-onsite-final`.
+* [x] **Architecture & AI Disclosure:** Full mathematical formulations for scarcity prioritization, overflow routing, counterfactual decay rates, and AI tool usage disclosure documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+* [x] **Sample Dispatch Exports:** Ready-to-review SMS, WhatsApp, and printable commissioner briefs included in [`/exports`](./exports/).
