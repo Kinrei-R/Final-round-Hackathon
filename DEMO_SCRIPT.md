@@ -5,6 +5,7 @@ Single take, no cuts. Wi-Fi/Ethernet off from 0:00 and visible on screen. Server
 | Time | Screen | Say / do |
 |---|---|---|
 | 0:00-0:35 | Terminal + banner | Say BLUEPINE. `ping -c1 8.8.8.8` fails. Point at `MODE: 100% OFFLINE DETERMINISTIC ENGINE`. |
+| 0:35-1:25 | Overview page, then `/app` | Open the overview at `/`, hover a few tiles, then click Open command center. |
 | 0:35-1:25 | Dashboard top | 31,320 rows, 60 wards, 5 cities, 2016-01-04 to 2025-12-29. Weekly cases median 0, p90 9, max 41. Forecast origin 2025-06-09, targets 2025-06-23, 06-30, 07-07, from out-of-sample models (holdout MAE 1.07 at h=2 vs 1.80 persistence). Flip to Live once: near-zero in off-season, flip back. |
 | 1:25-2:40 | Heatmap + allocation table | Priority formula. Drag stock 100% to 30%, crews 120 to 10: tiles gain red base edges, `CRITICAL DEFICIT` badges show exact shortfalls. Highest-priority wards stay fully supplied. |
 | 2:40-3:40 | Bed routing | Set surge 1.5x. Show transfer manifest (same city only), utilization %, unmet beds. Filter to Gazipur to show the city boundary. |

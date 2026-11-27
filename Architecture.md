@@ -101,14 +101,14 @@ FastAPI -> inference.Engine (ML, or precomputed if models fail to load)
         -> operations.plan: demand -> priority allocation -> bed routing
         -> operations.simulate: counterfactual effects -> ROI ranking
         -> operations.sms / whatsapp / commissioner_html -> exports/
-static/ (index.html, styles.css, app.js) <-> /api/* on 127.0.0.1
+static/ (landing.*, index.html, styles.css, app.js) <-> /api/* on 127.0.0.1
 ```
 
 ## 5. Offline guarantees
 
 | Guarantee | Mechanism |
 |---|---|
-| No external assets | Local `static/` only; system font stacks; stress test scans for external URLs |
+| No external assets | Local `static/` only; system font stacks; stress test scans text assets for external URLs; Content-Security-Policy restricts the browser to the same origin |
 | No outbound traffic | `/api/stress-test` patches socket connect and DNS during a full pipeline run; any non-loopback attempt fails and is counted; a probe to 8.8.8.8:53 must be blocked |
 | Model-file failure | Engine falls back to `forecasts*.csv` and `effects*.json`; verified with `models/` removed |
 | Determinism | Fixed seed, no early stopping, template text, no randomness; stress test hashes two runs |
