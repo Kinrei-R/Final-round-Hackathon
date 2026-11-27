@@ -121,3 +121,18 @@ Responsibilities:
 - Recommend suitable destinations
 - Provide routing recommendations
 
+#### 7.3 Vector Control Simulator
+
+Simulates possible vector-control interventions and their potential
+impact on dengue risk.
+
+Possible interventions:
+
+- Targeted mosquito-control operations
+- High-risk ward prioritization
+- Intervention coverage adjustment
+- Resource distribution scenarios
+
+The simulator supports scenario comparison for decision-making.
+
+---
