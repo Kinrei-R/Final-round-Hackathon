@@ -15,3 +15,15 @@ The system extends the existing Phase 1 codebase and integrates the
 onsite dataset without replacing the existing core functionality.
 
 ---
+
+### 2. Architectural Principles
+
+- Extend the existing Phase 1 codebase.
+- Preserve existing functionality and Git history.
+- Use modular and reusable components.
+- Support local and offline execution.
+- Avoid unnecessary external API dependencies.
+- Keep data processing, decision logic, and UI separate.
+- Make outputs explainable and suitable for demonstration.
+
+---
