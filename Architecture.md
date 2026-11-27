@@ -87,3 +87,23 @@ Responsibilities:
 - Provide data to the dashboard
 
 ---
+
+### 7. Decision & Optimization Layer
+
+#### 7.1 Resource Allocation Engine
+
+Determines how available resources should be prioritized and distributed
+according to risk levels, demand, and available capacity.
+
+Inputs:
+
+- Ward-level risk
+- Resource availability
+- Estimated demand
+- Priority indicators
+
+Outputs:
+
+- Resource allocation recommendations
+- Priority wards
+- Allocation summaries
