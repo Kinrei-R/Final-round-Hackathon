@@ -27,3 +27,16 @@ onsite dataset without replacing the existing core functionality.
 - Make outputs explainable and suitable for demonstration.
 
 ---
+
+### 3. High-Level Architecture
+
+The system consists of the following layers:
+
+1. Data Layer
+2. Data Processing Layer
+3. Decision & Optimization Layer
+4. Operational Layer
+5. Presentation Layer
+6. Local Storage & Export Layer
+
+---
