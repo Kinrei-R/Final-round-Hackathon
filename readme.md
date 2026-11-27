@@ -23,3 +23,15 @@ Forecasting dengue outbreaks two weeks in advance only saves lives if municipal 
 3. **"What-If" Vector Control Impact Simulator**
 4. **Actionable Multi-Channel Dispatch Notifications**
 5. **100% Offline Resilience & Deterministic Fallback**
+
+---
+
+## Core Modules & Operational Architecture
+
+### 1. Constrained Resource Allocation Engine
+Converts ward-level predicted cases and risk classifications into exact logistical requirements and vector-control crew assignments under real-world supply constraints:
+* **Calculated Resource Demands:**
+  * `saline_bags_needed`
+  * `diagnostic_kits_needed`
+  * `hospital_beds_required`
+  * `spraying_crews_assigned`
