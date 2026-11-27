@@ -171,3 +171,24 @@ Exports may include:
 - Intervention scenarios
 
 ---
+
+### 9. Presentation Layer
+
+The Command Dashboard provides a unified interface for monitoring
+and decision-making.
+
+Dashboard components:
+
+- Dengue risk overview
+- Ward-level prioritization
+- Resource availability
+- Allocation recommendations
+- Hospital overflow information
+- Intervention simulation
+- Dispatch alerts
+- Export functionality
+
+The dashboard communicates with the underlying modules through
+the existing project architecture.
+
+---
