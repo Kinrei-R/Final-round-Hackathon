@@ -48,3 +48,11 @@ Prevents localized hospital collapse during case surges while respecting municip
   * Gazipur
   * Narayanganj
 * **Net Deficit & Headroom Reporting:** Displays pre-transfer shortages, ward-to-ward transfer manifests, remaining city-wide bed headroom, and net unabsorbable city deficits if total municipal capacity is breached.
+
+### 3. "What-If" Vector Control Impact Simulator
+Enables health officers to test targeted larvicide and fogging deployments before dispatching field teams:
+* **Counterfactual Intervention Modeling:** Simulates deploying a limited pool of spraying crews to selected wards and computes the **2-to-4-week downstream reduction** in:
+  * Projected dengue cases
+  * Hospital bed occupancy load
+  * IV saline bag consumption
+  * **Intervention ROI Ranking:** Automatically ranks all 60 wards by **Cases Prevented per Crew ($\text{ROI} = \frac{\Delta \text{Cases}}{\text{Crews Deployed}}$)** to guide high-leverage field deployment.
