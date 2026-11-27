@@ -11,3 +11,15 @@
 * **Walkthrough Video (07:00 Uncut):** `[INSERT_UNLISTED_VIDEO_URL]`
 * **Git Tag / Commit Convention:** Continuous history extending Phase 1 (`version-onsite-final`)
 * **Dataset:** `bangladesh dengue large dataset onsite` (60 urban wards across **Dhaka North, Dhaka South, Chattogram, Gazipur, and Narayanganj**)
+
+---
+
+## Overview
+
+Forecasting dengue outbreaks two weeks in advance only saves lives if municipal commissioners and health center managers can translate predictions into immediate logistics. This Phase 2 system bridges predictive ML with real-time public health operations across all 60 wards through five integrated modules:
+
+1. **Constrained Resource Allocation Engine**
+2. **Hospital Surge & Cross-Ward Overflow Routing**
+3. **"What-If" Vector Control Impact Simulator**
+4. **Actionable Multi-Channel Dispatch Notifications**
+5. **100% Offline Resilience & Deterministic Fallback**
