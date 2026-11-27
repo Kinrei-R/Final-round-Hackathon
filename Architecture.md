@@ -248,3 +248,33 @@ Integration steps:
 
 ---
 
+### 13. Proposed Component Structure
+
+The following structure is a logical architecture.
+Actual filenames should follow the existing codebase.
+
+- frontend/
+  - dashboard/
+  - components/
+  - pages/
+
+- backend/
+  - data_processing/
+  - ward_engine/
+  - allocation/
+  - routing/
+  - simulation/
+  - dispatch/
+  - export/
+
+- dataset/
+  - onsite_dataset/
+
+- docs/
+  - ARCHITECTURE.md
+  - README.md
+
+Existing Phase 1 files and modules should be preserved
+and reused wherever possible.
+
+---
